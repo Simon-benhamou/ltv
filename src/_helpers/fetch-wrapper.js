@@ -36,7 +36,7 @@ function authHeader(url) {
 }
 
 function authToken() {
-    return store.getState().auth.user?.token;
+    return store.getState().auth?.token;
 }
 
 function handleResponse(response) {

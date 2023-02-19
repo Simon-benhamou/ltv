@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { history, fetchWrapper } from '_helpers';
-
+import Cookies from 'js-cookie';
+import jwt_decode from 'jwt-decode'
 // create slice
 
 const name = 'auth';
@@ -21,7 +22,8 @@ export const authReducer = slice.reducer;
 function createInitialState() {
     return {
         // initialize state from local storage to enable user to stay logged in
-        user: JSON.parse(localStorage.getItem('user')),
+        token: Cookies.get('jwt') || null,
+        user:Cookies.get('jwt') ?  jwt_decode(Cookies.get('jwt')) : null,
         error: null
     }
 }
@@ -34,6 +36,7 @@ function createReducers() {
     function logout(state) {
         state.user = null;
         localStorage.removeItem('user');
+        Cookies.remove('jwt')
         history.navigate('/login');
     }
 }
@@ -65,11 +68,14 @@ function createExtraReducers() {
                 state.error = null;
             },
             [fulfilled]: (state, action) => {
-                const user = action.payload;
+                const token = action.payload;
                 
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
-                localStorage.setItem('user', JSON.stringify(user));
-                state.user = user;
+                let expires = new Date()
+                expires.setTime(expires.getTime() + 84000 * 60 * 1000 * 6)
+                Cookies.set('jwt',token,{path:'/',expires})
+                state.token = token
+                state.user = jwt_decode(token);
 
                 // get return url from location state or default to home page
                 const { from } = history.location.state || { from: { pathname: '/' } };

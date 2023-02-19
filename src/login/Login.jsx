@@ -11,7 +11,7 @@ export { Login };
 
 function Login() {
     const dispatch = useDispatch();
-    const authUser = useSelector(x => x.auth.user);
+    const authUser = useSelector(x => x.auth.token);
     const authError = useSelector(x => x.auth.error);
 
     useEffect(() => {

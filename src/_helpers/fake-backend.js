@@ -12,8 +12,7 @@ function fakeBackend() {
                 switch (true) {
                     case url.endsWith('/users/authenticate') && opts.method === 'POST':
                         return authenticate();
-                    case url.endsWith('/users') && opts.method === 'GET':
-                        return getUsers();
+                   
                     default:
                         // pass through any requests not handled above
                         return realFetch(url, opts)
@@ -30,19 +29,9 @@ function fakeBackend() {
 
                 if (!user) return error('Username or password is incorrect');
 
-                return ok({
-                    id: user.id,
-                    username: user.username,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    token: 'fake-jwt-token'
-                });
+                return ok('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTZXNzaW9uSWQiOiJvcmczMDljNmI0YV9zaW1vbkBjZW1hbnRpY2EuY29tX19fMTExMjE5ODJfOTRiMTQwMmUtMWQ5NS00MDg3LTlhMjUtM2JkMzc1ZjY2NmJkIiwiVXNlcklkIjoiNGQwZTFlZGQtOTViMS1lYzExLTk4NDAtMDAwZDNhYmY1YmQ4IiwiVXNlckVtYWlsIjoic2ltb25AY2VtYW50aWNhLmNvbSIsIlVzZXJGdWxsTmFtZSI6IlNpbW9uIEJlbmhhbW91IiwiVXNlclR5cGUiOiIxMDAwMDAwMDAiLCJleHAiOjE2ODQ1OTE5MDksImlzcyI6ImNlbWFudGljYS5jb20iLCJhdWQiOiJjZW1hbnRpY2EuY29tIn0.WHT6SI1TDeaGyJMNoSvxsXo72rH8K7w_YKg3tRMpEk8');
             }
 
-            function getUsers() {
-                if (!isAuthenticated()) return unauthorized();
-                return ok(users);
-            }
 
             // helper functions
 
@@ -59,7 +48,8 @@ function fakeBackend() {
             }
 
             function isAuthenticated() {
-                return opts.headers['Authorization'] === 'Bearer fake-jwt-token';
+                return opts.headers['Authorization']=== 'Bearer fake-jwt-token';
+                
             }
 
             function body() {
